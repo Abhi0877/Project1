@@ -23,23 +23,15 @@ router.get("/blogs", authenticateMW.mid1, blogsController.getBlogs);
 
 //5)
 router.put(
-  "/blogs/:blogId",
-  authorizeMW.authrAuth,
-  blogsController.updateBlogs
+  "/blogs/:blogId",authorizeMW.authrAuth,blogsController.updateBlogs
 );
 
 //6)
-router.delete(
-  "/blogs/:blogId",
-  authorizeMW.authrAuth,
-  blogsController.deletedBlogs
+router.delete("/blogs/:blogId",authorizeMW.authrAuth,blogsController.deletedBlogs
 );
 
 // 7)
-router.delete(
-  "/blogs",
-  authenticateMW.mid1,
-  blogsController.deletedUsingQueryParams
+router.delete("/blogs",authenticateMW.mid1,blogsController.deletedUsingQueryParams
 );
 
 

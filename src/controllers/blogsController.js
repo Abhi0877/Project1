@@ -1,35 +1,69 @@
 const blogsModel = require("../models/blogsModel");
 const authorModel = require("../models/authorModel");
 
+const isvalid = function (value) {
+  if (typeof value === "undefined" || value === null) return false;
+  if (typeof value === "string" && value.length === 0) return false;
+  return true;
+};
+
+const isvalidRequestBody = function (requestbody) {
+  return Object.keys(requestbody).length > 0;
+};
+
+const isValidObjectId = function (objectId) {
+  return mongoose.Types.ObjectId.isValid(objectId);
+};
+
 
 ///////////////////////////////////////////////////3Createblog//////////////////////////////////////////////////////////////////////////
 
 const createBlogs = async function (req, res) {
   try {
-    let { title, body, authorId, category, subcategory } = req.body;
-
-    if (!(title && body && authorId && category && subcategory)) {
-      return res
-        .status(400)
-        .send({ status: false, data: "All fields are required" });
+    let requiredBody=req.body;
+    if(!isvalidRequestBody(requiredBody)){
+      return res.status(400).send({status :false, msg:"please provide author details"})
     }
+
+    let { title, body, authorId, category, subcategory, tags } = req.body;
+
+    if(!isvalid(title)){
+      return res.status(400).send({status : false , msg :"title is required"})
+    }
+
+    if(!isvalid(body)){
+      return res.status(400).send({status : false , msg :"body is required"})
+    }
+
+    
+    if(!isvalid(authorId)){
+      return res.status(400).send({status : false , msg :"authorid required"})
+    }
+
+    if(!isvalid(category)){
+      return res.status(400).send({status : false , msg :"category is required"})
+    }
+
+    
+    if(!isvalid(subcategory)){
+      return res.status(400).send({status : false , msg :"subcategory is required"})
+    }
+    
 
     let validAuthorId = await authorModel.findById(authorId);
     console.log(validAuthorId);
 
-    if (!validAuthorId) {
-      return res.status(409).send({ status: false, data: "Author not exist." });
-    }
-    
-    let dataBlogs = await blogsModel.create(req.body);
+    let dBlogs = await blogsModel.create(req.body);
     console.log("done");
 
     if (req.body.isPublished === true) {
-      dataBlogs.publishedAt = new Date();
-      dataBlogs.save();
+      dBlogs.publishedAt = new Date();
+      dBlogs.save();
     }
 
-    return res.status(201).send({ status: true, data: dataBlogs });
+   
+
+    return res.status(201).send({ status: true, data: dBlogs });
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }

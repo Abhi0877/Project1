@@ -18,14 +18,14 @@ let authrAuth = async function (req, res, next) {
 
     if (blogId) {
       let validBlog = await Blogs.findById(blogId);
-      requestedAuthorId = validBlog.authorId;
+      requestedAuthorId = validBlog.authorId;     
     }
 
     console.log(requestedAuthorId);
 
     if (authordata.authorId != requestedAuthorId) {
       return res.status(403).send({ status: false, msg: "Not Valid Author" });
-    }
+    }  //authorisation
 
     next();
   } catch (err) {

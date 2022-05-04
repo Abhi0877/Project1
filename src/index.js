@@ -9,9 +9,9 @@ app.use(bodyParser.urlencoded({ extended: true })); //6
 
 mongoose
   .connect(
-    "mongodb+srv://MiTesH:in856BpPgec4Dnff@cluster0.vpn59.mongodb.net/project-DB?retryWrites=true&w=majority",
+    "mongodb://localhost:27017/Blogs",
     {
-      //11-15
+      
       useNewUrlParser: true,
     }
   )
@@ -23,3 +23,7 @@ app.use("/", route);
 app.listen(process.env.PORT || 3000, function () {
   console.log("Express app running on port " + (process.env.PORT || 3000));
 });
+
+
+
+
