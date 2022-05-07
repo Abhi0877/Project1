@@ -22,7 +22,11 @@ let createStudent = async function (req, res) {
       return res.send({ status: false, msg: "please provide author details" })
     }
 
-    let { name, email, collegeId, mobile, isDeleted } = req.body
+    let { name, email,collegeName, mobile, isDeleted } = req.body
+
+    if(isDeleted==true){
+      return res.status(400).send({status : false , msg :"Request is invalid"})
+     }
 
     if (!isvalid(name)) {
       return res.status(400).send({ status: false, msg: "Name is required" })
@@ -31,8 +35,8 @@ let createStudent = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Email is required" })
     }
 
-    if (!isvalid(collegeId)) {
-      return res.status(400).send({ status: false, msg: "Email is required" })
+    if (!isvalid(collegeName)) {
+      return res.status(400).send({ status: false, msg: "College is required" })
     }
 
     if (!isvalid(mobile)) {
@@ -64,13 +68,12 @@ let createStudent = async function (req, res) {
     }
 
 
-    let validCollege = await collegeModel.findById(collegeId)
+    let collegeFind = await collegeModel.findOne({ name:collegeName })
 
-    if (!validCollege) {
-      return res.status(404).send({ status: false, msg: "College Does Not Exists" })
+    if (!collegeFind) {
+      return res.status(400).send({ status: false, msg: "College Name is invalid" })
     }
-
-    let StudentData = await studentModel.create(req.body)
+    let StudentData = await studentModel.create({ name, email, collegeId:collegeFind._id , mobile, isDeleted })
 
 
     return res.status(201).send({ status: true, data: StudentData })
@@ -82,7 +85,7 @@ let createStudent = async function (req, res) {
 
 let collegeDetails = async function (req, res) {
   try {
-    let collegeName = req.query.name;
+    let collegeName = req.query.collegeName;
      if(!collegeName){
       return res.status(400).send({ status: false, msg: "Enter College Name" })
      }
